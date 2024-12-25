@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VISSVA TEXTILES</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; padding: 0; }
+        .invoice { max-width: 800px; margin: auto; padding: 20px; border: 1px solid #ccc; border-radius: 5px; }
+        .invoice h2 { text-align: center;background-color: rgb(234, 162, 39);}
+        .invoice table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        .invoice table th, .invoice table td { border: 1px solid #ccc; padding: 10px; text-align: left; }
+        .invoice .total { text-align: right; font-weight: bold; }
+        .invoice button { margin-top: 20px; padding: 10px; background-color: #fbc30b; color: white; border: none; border-radius: 5px; cursor: pointer; }
+        .invoice button:hover { background-color: #f6d208; }
+        hr { border: 1px solid black; margin: 20px 0; }
+        .footer { text-align: center; margin-top: 40px; padding: 10px; border-top: 1px solid #164f4d;background-color: rgb(235, 220, 81); }
+        .footer p { margin: 5px;}
+        .footer .contact-info { font-size: 14px; color: #2c2b2b; }
+    </style>
+</head>
+<body>
+    <div class="invoice" id="invoice">
+        <h2>VISSVA TEXTILE</h2>
+        <p><strong>Customer Name:</strong> <span id="invoiceCustomerName"></span></p>
+        <p><strong>Customer Address:</strong> <span id="invoiceCustomerAddress"></span></p>
+        <p><strong>Phone Number:</strong> <span id="invoicePhoneNumber"></span></p>
+        <p><strong>Customer Type:</strong> <span id="invoiceCustomerType"></span></p>
+
+        <!-- Thin Black Line above the table -->
+        <hr>
+        <p><B>SALESPERSON:   BALAJI </p>
+        <P><B>JOB:     PRODUCT SALE</P>
+
+        <hr>
+        <table>
+            <thead>
+                <tr>
+                    <th>Item Description</th>
+                    <th>Quantity</th>
+                    <th>Price Per Unit</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td id="invoiceItemDescription"></td>
+                    <td id="invoiceQuantity"></td>
+                    <td id="invoicePrice"></td>
+                    <td id="invoiceItemTotal"></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <p class="total">Tax: <span id="invoiceTax"></span></p>
+        <p class="total">Total Amount Due: <span id="invoiceTotal"></span></p>
+
+        <button onclick="downloadInvoice()">Download Invoice</button>
+        <button onclick="window.print()">Print Invoice</button>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p>Thank you for your business!</p>
+            <p class="contact-info">For any inquiries, contact us at:</p>
+            <p class="contact-info">Email: support@company.com</p>
+            <p class="contact-info">Phone: (123) 456-7890</p>
+        </div>
+    </div>
+
+    <script>
+        window.onload = function() {
+            // Retrieve data from localStorage
+            const customerName = localStorage.getItem('customerName');
+            const customerAddress = localStorage.getItem('customerAddress');
+            const phoneNumber = localStorage.getItem('phoneNumber');
+            const customerType = localStorage.getItem('customerType');
+            const itemDescription = localStorage.getItem('itemDescription');
+            const quantity = localStorage.getItem('quantity');
+            const price = localStorage.getItem('price');
+            const itemTotal = localStorage.getItem('itemTotal');
+            const tax = localStorage.getItem('tax');
+            const total = localStorage.getItem('total');
+
+            // Populate the invoice with data
+            document.getElementById('invoiceCustomerName').textContent = customerName;
+            document.getElementById('invoiceCustomerAddress').textContent = customerAddress;
+            document.getElementById('invoicePhoneNumber').textContent = phoneNumber;
+            document.getElementById('invoiceCustomerType').textContent = customerType;
+            document.getElementById('invoiceItemDescription').textContent = itemDescription;
+            document.getElementById('invoiceQuantity').textContent = quantity;
+            document.getElementById('invoicePrice').textContent = `$${parseFloat(price).toFixed(2)}`;
+            document.getElementById('invoiceItemTotal').textContent = `$${parseFloat(itemTotal).toFixed(2)}`;
+            document.getElementById('invoiceTax').textContent = `$${parseFloat(tax).toFixed(2)}`;
+            document.getElementById('invoiceTotal').textContent = `$${parseFloat(total).toFixed(2)}`;
+        }
+
+        function downloadInvoice() {
+            // Create an invisible link to download the invoice as a PDF
+            const invoice = document.getElementById('invoice');
+            const options = {
+                filename: 'invoice.pdf',
+                html2canvas: { scale: 2 },
+                jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+            };
+            html2pdf().from(invoice).toPdf().get('pdf').then(function (pdf) {
+                pdf.save(options.filename);
+            });
+        }
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.js"></script>
+</body>
+</html>
